@@ -1,0 +1,217 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: #393939;
+}
+hr {
+    border: 1px solid #393939;
+    margin: 17px 0;
+}
+.banner {
+    height: 60px;
+    padding-left: 30px;
+    background-color: #A9A9A9;
+    line-height: 60px;
+    font-size: 32px;
+}
+.container {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    height: calc(100vh - 60px);
+    font-size: 20px;
+}
+.data-type {
+    background-color: #D9D9D9;
+    padding: 25px;
+}
+.type-container {
+    max-height: 55%;
+}
+.types {
+    background-color: #A9A9A9;
+    padding: 10px 5px;
+    margin: 2px 0;
+    position: relative;
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    border: 1px solid #393939;
+    border-radius: 10px;
+}
+.types img {
+    width: 25px;
+    cursor: pointer;
+}
+.context-menu {
+    display: none;
+    position: absolute;
+    right: -132px;
+    top: 10px;
+    background-color: #EBEBEB;
+    border-radius: 10px;
+    padding: 15px;
+    z-index: 1000;
+    width: 100px;
+    font-size: 20px;
+
+    div {
+        cursor: pointer;
+    }
+    hr {
+        margin: 8px 0;
+    }
+}
+.show {
+    display: block;
+}
+.add-button {
+    background-color: #EBEBEB;
+    border-radius: 10px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+.add-button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.add-button:active {
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+.current-type {
+    background-color: #EBEBEB;
+    width: calc(16% - 50px);
+    border-radius: 10px;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px;
+    font-size: 16px;
+}
+.color {
+    background-color: orange;
+    width: 15px;
+    height: 15px;
+    border: 1px solid #393939;
+    border-radius: 5px;
+}
+.save-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 14px;
+
+    div {
+        background-color: #EBEBEB;
+        padding: 0 15%;
+    }
+    div:hover {
+        background-color: #B9B9B9;
+    }
+    div:active {
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+}
+.calendar {
+    background-color: white;
+    padding: 30px;
+}
+.calendar-button {
+    display: flex;
+    flex-direction: row;
+}
+.weekday {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 25px;
+}
+.days {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding-top: 15px;
+}
+.day {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid #393939;
+    border-radius: 10px;
+    width: calc(100% / 10);
+    padding: calc(100% / 40) 0;
+    text-align: center;
+    margin: 3px 15px;
+}
+.day::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 35%;
+    bottom: 15px;
+    width: 30%;
+    height: 7px;
+    background-color: orange;
+    border-radius: 10px;
+}
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    display: none;
+}
+.setting {
+    display: none;
+    background-color: #D9D9D9;
+    position: fixed;
+    z-index: 9999;
+    left: 34%;
+    top: 5%;
+    width: 32%;
+    max-height: 80%;
+    padding: 25px;
+    overflow: auto;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+
+    div {
+        padding: 5px 0 5px 10px;
+    }
+}
+.period-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 0;
+    margin-right: 8%;
+
+    img {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+    img:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+}
+.text-input {
+    background-color: #EBEBEB;
+    width: 70%;
+    height: 25px;
+    padding: 0 15px;
+    margin: 0 0 0 15px;
+    border: none;
+    border-radius: 10px;
+}
+.color-input {
+    width: 25px;
+    height: 25px;
+    margin: 0 15px;
+    border: 1px solid #393939;
+    border-radius: 5px;
+}
