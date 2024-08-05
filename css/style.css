@@ -155,6 +155,20 @@ hr {
     background-color: orange;
     border-radius: 10px;
 }
+.month {
+    width: calc(100% / 5);
+    padding: 50px 0;
+    margin: 18px;
+    text-align: center;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0);
+    cursor: pointer;
+}
+.month:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid #393939;
+    border-radius: 10px;
+}
 .overlay {
     position: fixed;
     top: 0;

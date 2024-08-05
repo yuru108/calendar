@@ -34,11 +34,14 @@
         </div>
         <div class="calendar">
             <div class="calendar-button">
-                <h2 id="title" style="margin: 0; padding-left: 20px"></h2>
-                <img id="prev-month" alt="up" src="img/up.svg" style="width: 25px; cursor: pointer;">
-                <img id="next-month" alt="down" src="img/down.svg" style="width: 25px; cursor: pointer;">
+                <h2 id="title" style="margin: 0; padding-left: 20px; cursor: pointer;"></h2>
+                <div>
+                    <img alt="select" src="img/select.svg" style="width: 25px;">全選
+                </div>
+                <img id="prev" alt="prev" src="img/up.svg" style="width: 25px; cursor: pointer;">
+                <img id="next" alt="next" src="img/down.svg" style="width: 25px; cursor: pointer;">
             </div>
-            <div class="weekday">
+            <div id="weekday" class="weekday">
                 <div>日</div>
                 <div>一</div>
                 <div>二</div>
@@ -47,9 +50,9 @@
                 <div>五</div>
                 <div>六</div>
             </div>
-            <hr>
+            <hr id="separator">
             <div id="calendar-days" class="days">
-                <!-- Days will be inserted here -->
+                <!-- Days or Months or Decade will be inserted here -->
             </div>
         </div>
     </div>
