@@ -3,7 +3,15 @@ let currentEditTypeName = null;
 
 function createTypeElement(typeName, typeColor, periods = []) {
     const newType = document.createElement('div');
-    newType.className = 'types';
+    newType.className = 'type';
+    newType.setAttribute('data-type-name', typeName);
+    newType.setAttribute('data-type-color', typeColor);
+    newType.setAttribute('data-periods', JSON.stringify(periods));
+
+    if(isSelectMode) {
+        newType.classList.add('selectable-type');
+        newType.addEventListener('click', UpdateCurrentType);
+    }
 
     const menuId = 'menu-' + typeName.replace(/\s+/g, '-').toLowerCase();
 
@@ -11,13 +19,14 @@ function createTypeElement(typeName, typeColor, periods = []) {
         <div>${typeName}</div>
         <img alt="ellipsis" src="img/ellipsis.svg" style="width: 25px;" onclick="toggleMenu(event, '${menuId}')">
         <div id="${menuId}" class="context-menu">
-            <div data-type-name="${typeName}" data-type-color="${typeColor}" data-periods='${JSON.stringify(periods)}' onclick="editType(event)">Edit</div>
+            <div onclick="editType(event)">Edit</div>
             <hr>
             <div onclick="deleteType(event)">Delete</div>
         </div>
     `;
 
     document.getElementById('type-container').appendChild(newType);
+    document.dispatchEvent(new CustomEvent('typeElementCreated'));
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     createTypeElement(typeName.trim(), typeColor.trim(), parsedPeriods);
                 }
             });
+            document.dispatchEvent(new CustomEvent('allTypesLoaded'));
         })
         .catch(error => console.error('Error loading types:', error));
 });
@@ -73,10 +83,9 @@ document.getElementById('save-setting-button').addEventListener('click', functio
     if (typeName && typeColor) {
         if (currentEditTypeElement) {
             currentEditTypeElement.querySelector('div').textContent = typeName;
-            const contextMenu = currentEditTypeElement.querySelector('.context-menu');
-            contextMenu.querySelector('[onclick="editType(event)"]').setAttribute('data-type-name', typeName);
-            contextMenu.querySelector('[onclick="editType(event)"]').setAttribute('data-type-color', typeColor);
-            contextMenu.querySelector('[onclick="editType(event)"]').setAttribute('data-periods', JSON.stringify(periods));
+            currentEditTypeElement.setAttribute('data-type-name', typeName);
+            currentEditTypeElement.setAttribute('data-type-color', typeColor);
+            currentEditTypeElement.setAttribute('data-periods', JSON.stringify(periods));
 
             fetch('../php/saveType.php', {
                 method: 'POST',
@@ -91,12 +100,11 @@ document.getElementById('save-setting-button').addEventListener('click', functio
                         console.error('Error updating type:', data);
                     } else {
                         console.log(data);
+                        currentEditTypeElement = null;
+                        currentEditTypeName = null;
                     }
                 })
                 .catch(error => console.error('Error updating type:', error));
-
-            currentEditTypeElement = null;
-            currentEditTypeName = null;
         } else {
             createTypeElement(typeName, typeColor, periods);
 
@@ -117,10 +125,12 @@ document.getElementById('save-setting-button').addEventListener('click', functio
                 })
                 .catch(error => console.error('Error saving type:', error));
         }
-
+        document.getElementById('current-type-name').textContent = '名稱：' + typeName;
+        document.getElementById('current-type-color').style.backgroundColor = typeColor;
         document.getElementById('setting').style.display = 'none';
         document.getElementById('overlay').style.display = 'none';
         clearPeriods();
+        generateCalendar(currentYear, currentMonth);
     }
 });
 
@@ -149,7 +159,7 @@ document.addEventListener('click', function() {
 });
 
 function editType(event) {
-    const typeElement = event.target;
+    const typeElement = event.target.closest('.type');
     const typeName = typeElement.getAttribute('data-type-name');
     const typeColor = typeElement.getAttribute('data-type-color');
     const periods = JSON.parse(typeElement.getAttribute('data-periods'));
@@ -164,14 +174,15 @@ function editType(event) {
         addPeriod(period[0], period[1], index + 1);
     });
 
-    currentEditTypeElement = typeElement.closest('.types');
+    currentEditTypeElement = typeElement;
     currentEditTypeName = typeName;
+
     event.stopPropagation();
 }
 
 function deleteType(event) {
-    const typeElement = event.target.closest('.types');
-    const typeName = typeElement.querySelector('div').textContent;
+    const typeElement = event.target.closest('.type');
+    const typeName = typeElement.getAttribute('data-type-name');
 
     if (confirm(`確定要刪除 "${typeName}" 嗎？`)) {
         fetch('../php/deleteType.php', {
@@ -186,13 +197,13 @@ function deleteType(event) {
                 if (data === 'Type deleted successfully') {
                     typeElement.remove();
                     console.log(data);
+                    generateCalendar(currentYear, currentMonth);
                 } else {
                     console.error('Error deleting type:', data);
                 }
             })
             .catch(error => console.error('Error deleting type:', error));
     }
-
     event.stopPropagation();
 }
 

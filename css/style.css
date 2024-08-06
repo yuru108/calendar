@@ -13,6 +13,7 @@ hr {
     background-color: #A9A9A9;
     line-height: 60px;
     font-size: 32px;
+    font-weight: bold;
 }
 .container {
     display: grid;
@@ -27,20 +28,28 @@ hr {
 .type-container {
     max-height: 55%;
 }
-.types {
-    background-color: #A9A9A9;
+.type {
     padding: 10px 5px;
     margin: 2px 0;
     position: relative;
     display: flex;
     align-content: center;
     justify-content: space-between;
-    border: 1px solid #393939;
+    border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 10px;
+
+    img {
+        width: 25px;
+        cursor: pointer;
+    }
 }
-.types img {
-    width: 25px;
+.selectable-type:hover {
+    border: 1px solid #393939;
     cursor: pointer;
+}
+.selected-type {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid #393939;
 }
 .context-menu {
     display: none;
@@ -90,13 +99,13 @@ hr {
     font-size: 16px;
 }
 .color {
-    background-color: orange;
+    background-color: rgba(0, 0, 0, 0);
     width: 15px;
     height: 15px;
     border: 1px solid #393939;
     border-radius: 5px;
 }
-.save-button {
+.current-select-buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
@@ -121,6 +130,40 @@ hr {
 .calendar-button {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    font-size: 16px;
+
+    img:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+    img:active {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+}
+.view-button {
+    background-color: rgba(0, 0, 0, 0.3);
+    width: 70px;
+    padding: 2px 10px;
+    text-align: center;
+    border: 2px solid #393939;
+    border-radius: 15px 0 0 15px;
+}
+.view-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+.select-button {
+    width: 70px;
+    padding: 2px 10px;
+    text-align: center;
+    border: 2px solid #393939;
+    border-left: none;
+    border-radius: 0 15px 15px 0;
+}
+.select-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    cursor: pointer;
 }
 .weekday {
     display: flex;
@@ -136,15 +179,27 @@ hr {
 }
 .day {
     position: relative;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 1px solid #393939;
+    border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 10px;
     width: calc(100% / 10);
-    padding: calc(100% / 40) 0;
+    padding: calc(100% / 53) 0;
     text-align: center;
     margin: 3px 15px;
 }
-.day::after {
+.selectable {
+    cursor: pointer;
+}
+.selectable:hover {
+    border: 1px solid #393939;
+}
+.selected {
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid #393939;
+}
+.type-day {
+    --type-background-color: orange;
+}
+.type-day::after {
     content: "";
     display: block;
     position: absolute;
@@ -152,7 +207,7 @@ hr {
     bottom: 15px;
     width: 30%;
     height: 7px;
-    background-color: orange;
+    background-color: var(--type-background-color);
     border-radius: 10px;
 }
 .month {

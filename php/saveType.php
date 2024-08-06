@@ -27,12 +27,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $newLines[] = $newLine;
                 $updated = true;
             } else {
-                $newLines[] = $line;
+                $newLines[] = $line . "\n";
             }
         }
         if ($updated) {
-            file_put_contents($filename, implode($newLines));
+            file_put_contents($filename, implode('', $newLines));
             echo 'Type updated successfully';
+
+            $dateListDir = '../source/DateList/';
+            $files = glob($dateListDir . '*.txt');
+
+            foreach ($files as $filePath) {
+                $fileContents = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                $updatedContents = [];
+
+                foreach ($fileContents as $line) {
+                    $updatedLine = str_replace($originalType, $newType, $line);
+                    $updatedContents[] = $updatedLine;
+                }
+
+                file_put_contents($filePath, implode(PHP_EOL, $updatedContents) . PHP_EOL);
+            }
         } else {
             echo 'Type not found';
         }
