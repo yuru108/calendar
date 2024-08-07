@@ -13,15 +13,11 @@ function createTypeElement(typeName, typeColor, periods = []) {
         newType.addEventListener('click', UpdateCurrentType);
     }
 
-    const menuId = 'menu-' + typeName.replace(/\s+/g, '-').toLowerCase();
-
     newType.innerHTML = `
-        <div>${typeName}</div>
-        <img alt="ellipsis" src="img/ellipsis.svg" style="width: 25px;" onclick="toggleMenu(event, '${menuId}')">
-        <div id="${menuId}" class="context-menu">
-            <div onclick="editType(event)">Edit</div>
-            <hr>
-            <div onclick="deleteType(event)">Delete</div>
+        <div style="padding-right: 5px;">${typeName}</div>
+        <div style="display: flex; justify-items: center;">
+            <img alt="edit" src="../img/edit.svg" onclick="editType(event)" style="padding-right: 5px;">
+            <img alt="delete" src="../img/delete.svg" onclick="deleteType(event)">
         </div>
     `;
 
@@ -80,6 +76,25 @@ document.getElementById('save-setting-button').addEventListener('click', functio
         }
     });
 
+    if (!typeName) {
+        alert('名稱不可為空。');
+        return;
+    }
+
+    const typeExists = Array.from(document.querySelectorAll('.type')).some(typeElement => {
+        return typeElement.getAttribute('data-type-name') === typeName && currentEditTypeName !== typeName;
+    });
+
+    if (typeExists) {
+        alert('名稱已存在。');
+        return;
+    }
+
+    if (periods.length === 0) {
+        alert('至少需要有一個時段。');
+        return;
+    }
+
     if (typeName && typeColor) {
         if (currentEditTypeElement) {
             currentEditTypeElement.querySelector('div').textContent = typeName;
@@ -132,30 +147,6 @@ document.getElementById('save-setting-button').addEventListener('click', functio
         clearPeriods();
         generateCalendar(currentYear, currentMonth);
     }
-});
-
-function toggleMenu(event, menuId) {
-    const menu = document.getElementById(menuId);
-    if (!menu) return;
-
-    const menus = document.querySelectorAll('.context-menu');
-    if (!menus.length) return;
-
-    menus.forEach(m => {
-        if (m !== menu) m.classList.remove('show');
-    });
-
-    menu.classList.toggle('show');
-    event.stopPropagation();
-}
-
-document.addEventListener('click', function() {
-    const menus = document.querySelectorAll('.context-menu');
-    if (!menus.length) return;
-
-    menus.forEach(menu => {
-        menu.classList.remove('show');
-    });
 });
 
 function editType(event) {

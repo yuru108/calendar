@@ -63,6 +63,10 @@ function generateCalendar(year, month) {
             if(isSelectMode) {
                 updateSelectedDatesDisplay();
                 updateSelectAll();
+            } else {
+                document.getElementById('current-type').style.display = 'none';
+                document.getElementById('select-all').style.display = 'none';
+                document.getElementById('clear-type-button').style.display = 'none';
             }
             showWeekdays();
         })
@@ -129,6 +133,7 @@ function generateYearView() {
             generateCalendar(currentYear, currentMonth);
             document.getElementById('select-mode-buttons').style.display = 'flex';
             document.getElementById('select-all').style.display = 'flex';
+            document.getElementById('clear-type-button').style.display = 'flex';
             document.getElementById('current-type').style.display = 'block';
         });
         daysContainer.appendChild(monthCell);
@@ -201,7 +206,7 @@ document.getElementById('prev').addEventListener('click', () => {
             selectedDates = [];
         }
     }
-    if (isMonthView) {
+    if (isMonthView && !isDecadeView) {
         currentYear--;
         updateYearTitle(currentYear);
         generateYearView(currentYear);
@@ -229,7 +234,7 @@ document.getElementById('next').addEventListener('click', () => {
             selectedDates = [];
         }
     }
-    if (isMonthView) {
+    if (isMonthView && !isDecadeView) {
         currentYear++;
         updateYearTitle(currentYear);
         generateYearView(currentYear);
@@ -257,12 +262,13 @@ document.getElementById('title').addEventListener('click', () => {
             selectedDates = [];
         }
     }
-    if (!isMonthView) {
+    if (!isMonthView && !isMonthView) {
         isMonthView = true;
         updateYearTitle(currentYear);
         generateYearView(currentYear);
         document.getElementById('select-mode-buttons').style.display = 'none';
         document.getElementById('select-all').style.display = 'none';
+        document.getElementById('clear-type-button').style.display = 'none';
         document.getElementById('current-type').style.display = 'none';
     } else if (!isDecadeView) {
         isDecadeView = true;
@@ -282,6 +288,7 @@ document.getElementById('view-button').addEventListener('click', function () {
     selectedDates = [];
     selectedType = '';
     document.getElementById('select-all').style.display = 'none';
+    document.getElementById('clear-type-button').style.display = 'none';
     document.getElementById('current-type').style.display = 'none'
     document.getElementById('current-type-name').textContent = '名稱：';
     document.getElementById('current-type-color').style.backgroundColor = 'rgba(0, 0, 0, 0)';
@@ -301,6 +308,7 @@ document.getElementById('view-button').addEventListener('click', function () {
 document.getElementById('select-button').addEventListener('click', function () {
     isSelectMode = true;
     document.getElementById('select-all').style.display = 'flex';
+    document.getElementById('clear-type-button').style.display = 'flex';
     document.getElementById('current-type').style.display = 'block';
     document.getElementById('select-button').style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
     document.getElementById('view-button').style.backgroundColor = 'rgba(0, 0, 0, 0)'
@@ -379,6 +387,30 @@ function updateSelectAll() {
     }
 }
 
+document.getElementById('clear-type-button').addEventListener('click', function () {
+    const data = {
+        selectedDates: selectedDates,
+        action: 'clear'
+    };
+
+    fetch('../php/updateDateList.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => response.json())
+        .then(updatedData => {
+            console.log('Updated data:', updatedData);
+            selectedDates = [];
+            generateCalendar(currentYear, currentMonth);
+
+            alert('清除成功！');
+        })
+        .catch(error => console.error('Error:', error));
+});
+
 document.getElementById('select-all-button').addEventListener('click', function () {
     const selectIcon = document.getElementById('select-all-button');
     if (selectIcon.alt === 'unselect') {
@@ -418,9 +450,19 @@ document.getElementById('cancel-select-button').addEventListener('click', functi
 
 document.getElementById('save-select-button').addEventListener('click', function () {
     if (isSelectMode) {
+        if (selectedType === '') {
+            alert('請選擇一個Type');
+            return;
+        }
+        if (selectedDates.length === 0) {
+            alert('請至少選擇一個日期');
+            return;
+        }
+
         const data = {
             selectedDates: selectedDates,
-            selectedType: selectedType
+            selectedType: selectedType,
+            action: 'save'
         };
 
         fetch('../php/updateDateList.php', {

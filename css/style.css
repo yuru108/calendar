@@ -27,20 +27,28 @@ hr {
 }
 .type-container {
     max-height: 55%;
+    overflow: auto;
 }
 .type {
     padding: 10px 5px;
     margin: 2px 0;
     position: relative;
     display: flex;
-    align-content: center;
+    align-items: center;
     justify-content: space-between;
     border: 1px solid rgba(0, 0, 0, 0);
     border-radius: 10px;
 
     img {
-        width: 25px;
+        width: 15px;
+        border-radius: 5px;
         cursor: pointer;
+    }
+    img:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    img:active {
+        background-color: rgba(0, 0, 0, 0.3);
     }
 }
 .selectable-type:hover {
@@ -50,25 +58,6 @@ hr {
 .selected-type {
     background-color: rgba(0, 0, 0, 0.2);
     border: 1px solid #393939;
-}
-.context-menu {
-    display: none;
-    position: absolute;
-    right: -132px;
-    top: 10px;
-    background-color: #EBEBEB;
-    border-radius: 10px;
-    padding: 15px;
-    z-index: 1000;
-    width: 100px;
-    font-size: 20px;
-
-    div {
-        cursor: pointer;
-    }
-    hr {
-        margin: 8px 0;
-    }
 }
 .show {
     display: block;
@@ -140,6 +129,24 @@ hr {
     img:active {
         background-color: rgba(0, 0, 0, 0.3);
     }
+}
+.clear-type-button {
+    display: block;
+    background-color: rgba(0, 0, 0, 0);
+    flex-direction: row;
+    position: absolute;
+    right: 43%;
+    padding: 5px 10px;
+    border: 2px solid #393939;
+    border-radius: 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.clear-type-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.clear-type-button:active {
+    background-color: rgba(0, 0, 0, 0.3);
 }
 .view-button {
     background-color: rgba(0, 0, 0, 0.3);
